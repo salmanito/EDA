@@ -8,7 +8,7 @@ from langchain.chains.question_answering import load_qa_chain
 from langchain.schema import Document
 
 # API Key and Embeddings Initialization
-api_key = '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'
+api_key = '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'
 openai.api_key = api_key
 embeddings = OpenAIEmbeddings(openai_api_key=api_key)
 vector_store = None
