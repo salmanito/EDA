@@ -64,7 +64,7 @@ def get_chatbot_response(user_input, dataset, conversation_history):
         print(f"Chatbot response: {response}")
     except Exception as e:
         print(f"Error generating response: {e}")
-        response = {"output_text": "There was an error processing your request."}
+        response = {"output_text": f"There was an error processing your request: {str(e)}"}
 
     conversation_history.add_message({"role": "assistant", "content": response['output_text']})
     return response.get('output_text', 'No response content found.').strip()
