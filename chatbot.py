@@ -1,14 +1,18 @@
 import openai
 import pandas as pd
 from langchain.text_splitter import CharacterTextSplitter
-from langchain_openai import OpenAIEmbeddings  # Updated import due to deprecation
+from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_community.chat_models import ChatOpenAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain.schema import Document
+import streamlit as st
 
-# API Key and Embeddings Initialization
-api_key = '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'
+# Fetch API Key from Streamlit secrets
+api_key = st.secrets["openai"]["api_key"]
+if not api_key:
+    raise ValueError("API key not found in Streamlit secrets")
+
 openai.api_key = api_key
 embeddings = OpenAIEmbeddings(openai_api_key=api_key)
 vector_store = None
@@ -40,7 +44,8 @@ def get_chatbot_response(user_input, dataset, conversation_history):
         print("Initializing vector store with dataset")
         initialize_data_from_dataset(dataset)
 
-    retrieved_docs = vector_store.similarity_search(user_input, k=100000)
+    # Retrieve a reasonable number of documents
+    retrieved_docs = vector_store.similarity_search(user_input, k=10)  # Adjust k as needed
     qa_chain = load_qa_chain(llm=ChatOpenAI(model_name="gpt-4-turbo", openai_api_key=api_key))
     conversation_history.add_message({"role": "user", "content": user_input})
     print(f"User input: {user_input}")
@@ -52,5 +57,5 @@ def get_chatbot_response(user_input, dataset, conversation_history):
         print(f"Error generating response: {e}")
         response = {"output_text": "There was an error processing your request."}
 
-    conversation_history.add_message({"role": "assistant", "content": response['output_text']})
+    conversation_history.add_message({"role": "assistant", "content": response.get('output_text', 'No response content found.').strip()})
     return response.get('output_text', 'No response content found.').strip()
