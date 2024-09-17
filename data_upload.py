@@ -16,7 +16,7 @@ def update_data_summary():
 
 def upload_data():
     """Handle data file upload and store in session state."""
-    uploaded_file = st.sidebar.file_uploader("Upload your dataset (CSV or XLSX)", type=['csv', 'xlsx'])
+    uploaded_file = st.sidebar.file_uploader("Please upload your dataset to start the process (CSV or XLSX)", type=['csv', 'xlsx'])
     if uploaded_file is not None:
         # Initialize session state for 'df' if not already present
         if 'df' not in st.session_state:
