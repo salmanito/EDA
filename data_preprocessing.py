@@ -287,4 +287,3 @@ def data_preprocessing_page():
                 st.write("Calling chatbot...")
                 response = get_chatbot_response(user_input, st.session_state.df, st.session_state.conversation_history)
                 st.write(response)
-
